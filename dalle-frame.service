@@ -1,0 +1,15 @@
+# flask run -h :: -p 8080
+
+[Unit]
+Description=DALL-E frame application
+After=network.target
+
+[Service]
+User=pi
+EnvironmentFile=/etc/dalle-frame
+WorkingDirectory=/home/pi/dalle-frame-server
+ExecStart=/usr/bin/flask run -h :: -p 8080
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
