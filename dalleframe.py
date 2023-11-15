@@ -10,21 +10,22 @@ import time
 from waveshare_epd import epd5in65f
 from PIL import Image,ImageDraw,ImageFont
 
-import openai
+from openai import OpenAI
+
+client = OpenAI(api_key=os.getenv('OPENAI_KEY'))
 
 IMAGE_FOLDER="static/images/"
-openai.api_key = os.getenv('OPENAI_KEY')
+
 
 def request_image(prompt):
     # Set your API key
 
     print("Requesting image from DALL-E with prompt: ", prompt)
     # Generate the image with DALL-E
-    response = openai.Image.create(prompt=prompt, n=1, size="1024x1024")
+    response = client.images.generate(prompt=prompt, model="dall-e-3", n=1, size="1024x1024")
 
     # Get the URL of the generated image
-    image_url = response['data'][0]['url']
-
+    image_url = response.data[0].model_dump()['url']
 
     filename = "dall-e-image-" + time.strftime("%Y%m%d-%H%M%S") + "_" + prompt.replace(' ', '-') + ".png"
     image_path = os.path.join(IMAGE_FOLDER, filename)
